@@ -293,11 +293,18 @@ export default function HabitDashboard() {
                 ? `목표까지 ${weeklyStats.weeklyGoal - weeklyStats.completedHabits}개 남았어요!`
                 : "이번 주 목표를 달성했어요! 🎉"}
             </p>
-            <Link href="/add-habit">
-              <Button size="sm" className="mt-2">
-                새 습관 추가하기
-              </Button>
-            </Link>
+            <div className="flex space-x-2">
+              <Link href="/record" className="flex-1">
+                <Button size="sm" className="w-full">
+                  습관 기록하기
+                </Button>
+              </Link>
+              <Link href="/add-habit" className="flex-1">
+                <Button size="sm" variant="outline" className="w-full bg-transparent">
+                  새 습관 추가
+                </Button>
+              </Link>
+            </div>
           </div>
         </CardContent>
       </Card>
