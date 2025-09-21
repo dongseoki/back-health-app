@@ -18,6 +18,8 @@ export class PaymentValidator {
    * 전체 결제 폼 검증
    */
   static validateForm(formData: PaymentFormData): ValidationResult {
+    // debugger;
+    console.debug("formData:::", formData);
     const errors: ValidationErrors = {};
     let isValid = true;
 
