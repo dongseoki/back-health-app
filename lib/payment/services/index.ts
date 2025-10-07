@@ -3,3 +3,4 @@
  */
 
 export * from './kcp-service';
+export * from './kcp-form-builder';

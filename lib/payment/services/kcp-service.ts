@@ -49,56 +49,23 @@ export class KCPService {
   }
 
   /**
-   * KCP 결제창 호출
+   * KCP 결제창 호출 (실제 구현)
    */
-  static async executePayment(formData: PaymentFormData): Promise<PaymentResponse> {
+  static executePayment(formData: PaymentFormData): void {
     try {
-      const kcpRequest = this.convertToKCPRequest(formData);
+      // KCP 전역 함수가 있는지 확인
+      if (typeof window === 'undefined' || !(window as any).KCP_Pay_Execute) {
+        throw new Error('KCP 결제 스크립트가 로드되지 않았습니다.');
+      }
+
+      // KCP 폼 생성 및 결제창 호출
+      const { KCPFormBuilder } = require('./kcp-form-builder');
+      KCPFormBuilder.executePayment(formData);
       
-      // KCP 결제창 호출 (실제 구현은 클라이언트에서)
-      const result = await this.callKCPPaymentWindow(kcpRequest);
-      
-      return {
-        success: result.success,
-        message: result.success ? '결제가 완료되었습니다.' : result.responseMessage,
-        transactionId: result.transactionId,
-        orderId: formData.orderId
-      };
     } catch (error) {
       console.error('KCP 결제 실행 중 오류:', error);
-      return {
-        success: false,
-        message: '결제 처리 중 오류가 발생했습니다.',
-        orderId: formData.orderId
-      };
+      throw error;
     }
-  }
-
-  /**
-   * KCP 결제창 호출 (클라이언트에서 구현)
-   */
-  private static async callKCPPaymentWindow(kcpRequest: KCPPaymentRequest): Promise<KCPPaymentResult> {
-    return new Promise((resolve, reject) => {
-      try {
-        // KCP 전역 함수가 있는지 확인
-        if (typeof window !== 'undefined' && (window as any).KCP_Pay_Execute) {
-          // 실제 KCP 결제창 호출 로직은 클라이언트 컴포넌트에서 구현
-          // 여기서는 기본 구조만 제공
-          resolve({
-            success: true,
-            responseCode: KCP_RESPONSE_CODES.SUCCESS,
-            responseMessage: '결제 성공',
-            transactionId: 'TEST_' + Date.now(),
-            paymentMethod: kcpRequest.pay_method,
-            amount: kcpRequest.good_mny
-          });
-        } else {
-          reject(new Error('KCP 결제 스크립트가 로드되지 않았습니다.'));
-        }
-      } catch (error) {
-        reject(error);
-      }
-    });
   }
 
   /**
