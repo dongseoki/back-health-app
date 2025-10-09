@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../work_projects/workEzpmp/order2-api"
+		},
+		{
+			"path": "../tosspayments-sample/spring-javascript"
+		},
+		{
+			"path": "../tosspayments-sample/express-react"
+		}
+	],
+	"settings": {}
+}
