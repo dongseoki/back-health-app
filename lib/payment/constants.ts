@@ -93,3 +93,11 @@ export const WIDGET_CONFIG = {
   VARIANT_KEY: 'DEFAULT',
   AGREEMENT_VARIANT_KEY: 'AGREEMENT',
 } as const;
+
+// 결제 테스트 카드 정보
+export const TEST_CARD_INFO = {
+  CARD_NUMBER: '4242-4242-4242-4242',
+  EXPIRY_DATE: '12/34',
+  CVC: '123',
+  PASSWORD: '12',
+} as const;
