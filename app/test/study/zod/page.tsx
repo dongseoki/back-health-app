@@ -6,7 +6,7 @@ import { useEffect } from 'react';  // 이 줄 추가
 // 스키마 정의
 const UserSchema = z.object({
   name: z.string(),
-  age: z.number().min(0),
+  age: z.number().min(0, "나이는 0보다 커야합니다."),
   email: z.string().email(),
 });
 
@@ -23,10 +23,11 @@ const userData = {
 
 export default function Zod() {
     useEffect(() => {
-        const result  = UserSchema.safeParse(userData);
+        const result: z.SafeParseReturnType<User, typeof userData> = UserSchema.safeParse(userData);
         if (result.success) {
         console.log(result.data); // 타입 안전한 데이터
         } else {
+            // debugger;
         console.log(result.error); // 검증 에러
         }
         console.log(result);
