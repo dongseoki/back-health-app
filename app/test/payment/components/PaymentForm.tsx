@@ -194,6 +194,14 @@ export function PaymentForm({ onSubmit, isLoading = false }: PaymentFormProps) {
               </AlertDescription>
             </Alert>
           )}
+
+          <Button 
+            type="submit" 
+            disabled={!isValid || isLoading}
+            className="w-full"
+          >
+            {isLoading ? '처리 중...' : '다음 단계로'}
+          </Button>
         </form>
       </CardContent>
     </Card>

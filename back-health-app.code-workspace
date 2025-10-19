@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "../tosspayments-sample/express-react"
+		},
+		{
+			"path": "../dsSnsPlatform2"
 		}
 	],
 	"settings": {
