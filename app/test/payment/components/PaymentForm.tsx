@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Zap } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface PaymentFormProps {
@@ -29,7 +29,7 @@ export function PaymentForm({ onSubmit, isLoading = false }: PaymentFormProps) {
     validateOnMount: false,
   });
 
-  const { register, handleSubmit, formState: { errors, isDirty, isValid } } = form;
+  const { register, handleSubmit, setValue, formState: { errors, isDirty, isValid } } = form;
 
   const handleFormSubmit = (data: PaymentFormData) => {
     onSubmit(data);
@@ -41,6 +41,18 @@ export function PaymentForm({ onSubmit, isLoading = false }: PaymentFormProps) {
     };
   };
 
+  // 테스트 데이터 자동 입력 핸들러
+  const handleAutoFill = () => {
+    setValue('orderName', '백건강 앱 프리미엄 구독');
+    setValue('amount', 50000);
+    setValue('customerEmail', 'test@example.com');
+    setValue('customerName', '홍길동');
+    setValue('customerMobilePhone', '01012345678');
+    
+    // 폼 검증을 강제로 실행하여 상태 업데이트
+    form.trigger();
+  };
+
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
@@ -50,6 +62,19 @@ export function PaymentForm({ onSubmit, isLoading = false }: PaymentFormProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {/* 테스트 데이터 자동 입력 버튼 */}
+        <div className="flex justify-center">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleAutoFill}
+            className="flex items-center gap-2"
+          >
+            <Zap className="h-4 w-4" />
+            🧪 테스트 데이터 자동 입력
+          </Button>
+        </div>
+        
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
           {/* 주문명 */}
           <div className="space-y-2">
