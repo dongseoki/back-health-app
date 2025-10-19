@@ -37,7 +37,7 @@ export function PaymentWidget({
         setIsLoading(true);
         setError(null);
 
-        const tossPayments = await loadTossPayments(TOSS_PAYMENTS_CONFIG.CLIIENT_KEY);
+        const tossPayments = await loadTossPayments(TOSS_PAYMENTS_CONFIG.CLIENT_KEY);
         
         // 회원 결제용 위젯 생성
         const widgets = tossPayments.widgets({
