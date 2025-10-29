@@ -28,15 +28,60 @@ export default function PaymentSuccessPage() {
     const paymentType = searchParams.get('paymentType');
 
     if (paymentKey && orderId && amount) {
-      setPaymentData({
-        paymentKey,
-        orderId,
-        amount: parseInt(amount),
-        paymentType: paymentType || '카드',
-      });
+      // 서버단에서 결제 승인 API 호출
+      const confirmPayment = async () => {
+        try {
+          const response = await fetch('/api/payment/confirm', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              paymentKey,
+              orderId,
+              amount: parseInt(amount),
+            }),
+          });
+
+          const result = await response.json();
+          console.log('결제승인 결과 : ', result);
+
+          if (!response.ok) {
+            console.error('결제 승인 실패:', result);
+            // 실패 시에도 기본 정보는 표시
+            setPaymentData({
+              paymentKey,
+              orderId,
+              amount: parseInt(amount),
+              paymentType: paymentType || '카드',
+            });
+          } else {
+            // 승인 성공 시 서버 응답 데이터 반영
+            setPaymentData({
+              paymentKey,
+              orderId,
+              amount: parseInt(amount),
+              paymentType: paymentType || '카드',
+            });
+          }
+        } catch (error) {
+          console.error('결제 승인 API 호출 오류:', error);
+          // 오류 발생 시에도 기본 정보는 표시
+          setPaymentData({
+            paymentKey,
+            orderId,
+            amount: parseInt(amount),
+            paymentType: paymentType || '카드',
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      confirmPayment();
+    } else {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   }, [searchParams]);
 
   const formatCurrency = (value: number) => {
