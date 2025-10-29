@@ -8,8 +8,11 @@ const getEncryptedSecretKey = (secretKey: string): string => {
 };
 
 // TODO: 개발자센터에 로그인해서 내 결제위젯 연동 키 > 시크릿 키를 입력하세요. 시크릿 키는 외부에 공개되면 안돼요.
+// TODO 시크릿 키들 환경 변수와 gitignore 추가 필요.
+// 다음은 MVP 테스트라 중요성은 낮음.
 // @docs https://docs.tosspayments.com/reference/using-api/api-keys
 const apiSecretKey = process.env.TOSS_SECRET_KEY || 'test_sk_zXLkKEypNArWmo50nX3lmeaxYG5R';
+const widgetSecretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,11 +40,24 @@ export async function POST(request: NextRequest) {
     });
 
     const encryptedApiSecretKey = getEncryptedSecretKey(apiSecretKey);
+    const encryptedWidgetSecretKey = getEncryptedSecretKey(widgetSecretKey);
 
-    // 결제 승인 API 호출 전 로그
+    // 토스페이먼츠 API 호출용 headers
+    const headers = {
+      // Authorization: encryptedApiSecretKey,
+      Authorization: encryptedWidgetSecretKey,
+      'Content-Type': 'application/json',
+    };
+
+    // 결제 승인 API 호출 전 로그 (headers 정보 포함)
     console.log('[결제 승인 API] 토스페이먼츠 API 호출 시작:', {
       url: 'https://api.tosspayments.com/v1/payments/confirm',
       method: 'POST',
+      headers: {
+        // Authorization: encryptedApiSecretKey.substring(0, 20) + '...',
+        Authorization: encryptedWidgetSecretKey.substring(0, 20) + '...',
+        'Content-Type': headers['Content-Type'],
+      },
       orderId,
       timestamp: new Date().toISOString()
     });
@@ -51,10 +67,7 @@ export async function POST(request: NextRequest) {
     // @docs https://docs.tosspayments.com/guides/v2/payment-widget/integration#3-결제-승인하기
     const response = await fetch('https://api.tosspayments.com/v1/payments/confirm', {
       method: 'POST',
-      headers: {
-        Authorization: encryptedApiSecretKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({
         orderId: orderId,
         amount: amount,

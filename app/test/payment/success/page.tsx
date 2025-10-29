@@ -31,16 +31,28 @@ export default function PaymentSuccessPage() {
       // 서버단에서 결제 승인 API 호출
       const confirmPayment = async () => {
         try {
+          const requestHeaders = {
+            'Content-Type': 'application/json',
+          };
+          const requestBody = {
+            paymentKey,
+            orderId,
+            amount: parseInt(amount),
+          };
+
+          // 브라우저단 요청 headers 정보 로그
+          console.log('[브라우저] 결제 승인 API 요청:', {
+            url: '/api/payment/confirm',
+            method: 'POST',
+            headers: requestHeaders,
+            body: requestBody,
+            timestamp: new Date().toISOString()
+          });
+
           const response = await fetch('/api/payment/confirm', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              paymentKey,
-              orderId,
-              amount: parseInt(amount),
-            }),
+            headers: requestHeaders,
+            body: JSON.stringify(requestBody),
           });
 
           const result = await response.json();
